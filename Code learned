@@ -1,0 +1,590 @@
+# Python Beginner Guide: Important Concepts From The Degrees Project
+
+This guide focuses only on the most important Python concepts you used in the Degrees project.
+
+The goal is to make these topics very clear, even if you are still a beginner.
+
+---
+
+# 1. Nested Dictionaries
+
+## What is a dictionary?
+
+A dictionary stores data using key-value pairs.
+
+Example:
+
+```python
+person = {
+    "name": "Tom Hanks",
+    "birth": "1956"
+}
+```
+
+Here:
+
+* `"name"` is a key
+* `"Tom Hanks"` is the value
+
+You can access values with:
+
+```python
+print(person["name"])
+```
+
+Result:
+
+```python
+Tom Hanks
+```
+
+---
+
+## What is a nested dictionary?
+
+A nested dictionary is a dictionary inside another dictionary.
+
+Example:
+
+```python
+people = {
+    "158": {
+        "name": "Tom Hanks",
+        "birth": "1956",
+        "movies": {"112384", "109830"}
+    },
+    "705": {
+        "name": "Robin Wright",
+        "birth": "1966",
+        "movies": {"112384"}
+    }
+}
+```
+
+The first key is the person ID.
+
+Inside each person ID, there is another dictionary.
+
+---
+
+## How to access nested values
+
+Example:
+
+```python
+print(people["158"])
+```
+
+Result:
+
+```python
+{
+    "name": "Tom Hanks",
+    "birth": "1956",
+    "movies": {"112384", "109830"}
+}
+```
+
+If you want only the name:
+
+```python
+print(people["158"]["name"])
+```
+
+Result:
+
+```python
+Tom Hanks
+```
+
+If you want the birth year:
+
+```python
+print(people["158"]["birth"])
+```
+
+---
+
+## Why nested dictionaries are useful
+
+They allow you to organize related information together.
+
+Instead of creating many separate variables:
+
+```python
+name = "Tom Hanks"
+birth = "1956"
+movies = {"112384", "109830"}
+```
+
+You can group everything in one structure.
+
+---
+
+# 2. Sets
+
+## What is a set?
+
+A set is a collection of unique values.
+
+Example:
+
+```python
+movies = {"112384", "109830", "104257"}
+```
+
+Important:
+
+A set cannot contain duplicates.
+
+Example:
+
+```python
+movies = {"112384", "112384", "104257"}
+print(movies)
+```
+
+Result:
+
+```python
+{"112384", "104257"}
+```
+
+The duplicate value is automatically removed.
+
+---
+
+## Why use a set?
+
+Sets are useful when:
+
+* you do not want duplicates
+* you want fast membership checking
+
+Example:
+
+```python
+if "112384" in movies:
+    print("Movie found")
+```
+
+---
+
+## Important set methods
+
+### add()
+
+Used to add a value.
+
+```python
+movies.add("999999")
+```
+
+Example:
+
+```python
+movies = {"112384", "104257"}
+movies.add("109830")
+print(movies)
+```
+
+---
+
+## Sets in your project
+
+Example:
+
+```python
+people[row["person_id"]]["movies"].add(row["movie_id"])
+```
+
+This means:
+
+1. Find the person
+2. Access their movie set
+3. Add a new movie ID
+
+---
+
+# 3. Tuple Unpacking
+
+## What is a tuple?
+
+A tuple stores multiple values together.
+
+Example:
+
+```python
+pair = ("104257", "129")
+```
+
+This tuple contains:
+
+* movie ID
+* person ID
+
+---
+
+## Accessing tuple values manually
+
+```python
+pair = ("104257", "129")
+
+movie_id = pair[0]
+person_id = pair[1]
+```
+
+---
+
+## Tuple unpacking
+
+Tuple unpacking means extracting values directly.
+
+Example:
+
+```python
+movie_id, person_id = ("104257", "129")
+```
+
+Now:
+
+```python
+print(movie_id)
+print(person_id)
+```
+
+Result:
+
+```python
+104257
+129
+```
+
+---
+
+## Tuple unpacking in loops
+
+Example:
+
+```python
+neighbors = {
+    ("104257", "129"),
+    ("112384", "705")
+}
+
+for movie_id, person_id in neighbors:
+    print(movie_id, person_id)
+```
+
+This is much easier to read than:
+
+```python
+for pair in neighbors:
+    movie_id = pair[0]
+    person_id = pair[1]
+```
+
+---
+
+# 4. Classes and Objects
+
+## What is a class?
+
+A class is like a blueprint.
+
+It describes what an object should contain.
+
+Example:
+
+```python
+class Dog:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+```
+
+This class says that every Dog object has:
+
+* a name
+* an age
+
+---
+
+## What is an object?
+
+An object is an instance of a class.
+
+Example:
+
+```python
+my_dog = Dog("Max", 5)
+```
+
+Now:
+
+```python
+print(my_dog.name)
+print(my_dog.age)
+```
+
+Result:
+
+```python
+Max
+5
+```
+
+---
+
+## Node objects in your project
+
+You used:
+
+```python
+Node(state=person_id, parent=node, action=movie_id)
+```
+
+A Node object stores:
+
+* `state` = current actor
+* `parent` = previous node
+* `action` = movie used to reach this actor
+
+Example:
+
+```python
+child = Node(state="129", parent=node, action="104257")
+```
+
+---
+
+## Accessing object attributes
+
+You access attributes with a dot.
+
+Example:
+
+```python
+print(node.state)
+print(node.parent)
+print(node.action)
+```
+
+---
+
+# 5. CSV Reader
+
+## What is a CSV file?
+
+CSV means:
+
+```text
+Comma Separated Values
+```
+
+Example:
+
+```text
+id,name,birth
+158,Tom Hanks,1956
+705,Robin Wright,1966
+```
+
+---
+
+## Reading a CSV file
+
+Example:
+
+```python
+with open("people.csv", encoding="utf-8") as f:
+    reader = csv.DictReader(f)
+```
+
+`csv.DictReader` reads each row as a dictionary.
+
+Example row:
+
+```python
+{
+    "id": "158",
+    "name": "Tom Hanks",
+    "birth": "1956"
+}
+```
+
+---
+
+## Accessing CSV values
+
+Example:
+
+```python
+for row in reader:
+    print(row["name"])
+```
+
+Result:
+
+```python
+Tom Hanks
+Robin Wright
+```
+
+---
+
+# 6. try / except
+
+## Why use try / except?
+
+Sometimes code can fail.
+
+Example:
+
+```python
+numbers = [1, 2, 3]
+print(numbers[10])
+```
+
+This crashes because index 10 does not exist.
+
+---
+
+## Basic try / except
+
+Example:
+
+```python
+try:
+    print(numbers[10])
+except:
+    print("Error")
+```
+
+Result:
+
+```python
+Error
+```
+
+The program continues instead of crashing.
+
+---
+
+## try / except in your project
+
+Example:
+
+```python
+try:
+    people[row["person_id"]]["movies"].add(row["movie_id"])
+    movies[row["movie_id"]]["stars"].add(row["person_id"])
+except KeyError:
+    pass
+```
+
+This protects the program if:
+
+* a person ID does not exist
+* a movie ID does not exist
+
+---
+
+## What does pass mean?
+
+`pass` means:
+
+```text
+Do nothing
+```
+
+Example:
+
+```python
+except KeyError:
+    pass
+```
+
+This means:
+
+* ignore the error
+* continue the program
+
+---
+
+# 7. zip()
+
+## What does zip do?
+
+`zip()` combines multiple lists together.
+
+Example:
+
+```python
+movie_ids = ["104257", "112384"]
+person_ids = ["129", "705"]
+```
+
+Using zip:
+
+```python
+result = zip(movie_ids, person_ids)
+print(list(result))
+```
+
+Result:
+
+```python
+[("104257", "129"), ("112384", "705")]
+```
+
+---
+
+## Why zip was useful in your project
+
+You had:
+
+```python
+movie_id = ["104257", "112384"]
+person_id = ["129", "705"]
+```
+
+But the program expected:
+
+```python
+[("104257", "129"), ("112384", "705")]
+```
+
+So you used:
+
+```python
+solution = list(zip(movie_id, person_id))
+```
+
+---
+
+## Important thing to know about zip
+
+`zip()` returns a zip object.
+
+To see the values clearly, you usually convert it into a list.
+
+Example:
+
+```python
+pairs = list(zip(movie_ids, person_ids))
+```
+
+---
+
+# Final Summary
+
+These are the most important ideas:
+
+* Nested dictionaries help organize complex data
+* Sets store unique values
+* Tuple unpacking makes code easier to read
+* Classes create objects with attributes
+* CSV reader turns file rows into dictionaries
+* try / except prevents crashes
+* zip combines lists together
